@@ -37,26 +37,54 @@ def main():
 #    messages.append({"role": "system", "content": system_prompt})
     
     messages = [
-    {"role": "system", "content": system_prompt},
-    {"role": "user", "content": args.user_prompt},
+            {"role": "system", "content": system_prompt},
+            {"role": "user", "content": args.user_prompt},
     ]
 
+    #first call to chat.completions.create to get the first response from the model
     response = client.chat.completions.create(
-        model = "openrouter/free",
-        messages = messages,
-        temperature=0,
-        tools=available_functions,
+    model = "openrouter/free",
+    messages = messages,
+    temperature=0,
+    tools=available_functions,
     )
+
+    #running the agent loop for 20 iterations
+    for _ in range(20):
+            message = response.choices[0].message
+            messages.append(message)
+
+
+            tool_calls = response.choices[0].message.tool_calls
+            if not tool_calls:
+                break
+            for tool_call in tool_calls:
+                 
+                 function_return_val = call_function(tool_call, verbose=args.verbose)
+                 messages.append(function_return_val)
+                 break
+
+            response = client.chat.completions.create(
+                model = "openrouter/free",
+                messages = messages,
+                temperature=0,
+                tools=available_functions,
+            )
+
+                 
+
 # printing prompt tokens and response token usage based on the object returned by chat.completions.create
 
     if response.usage == None:
         raise RuntimeError("Did not get response, response usage property is None")
     else:
+
+
         if args.verbose:
             print(f"User prompt: {prompt}")
             print(f"Prompt tokens: {response.usage.prompt_tokens}")
             print(f"Response tokens: {response.usage.completion_tokens}")
-        print(f"Response:")
+        print(f"Final response:")
         print(response.choices[0].message.content)
         if response.choices[0].message.tool_calls:
             for tool_call in response.choices[0].message.tool_calls:

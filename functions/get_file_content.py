@@ -33,7 +33,7 @@ schema_get_files_content = {
     "type": "function",
     "function": {
         "name": "get_file_content",
-        "description": "gets content from a file, upto a fixed max limit (10000 characters here)",
+        "description": "reads/gets content from a file, upto a fixed max limit (10000 characters here)",
         "parameters": {
             "type": "object",
             "properties": {

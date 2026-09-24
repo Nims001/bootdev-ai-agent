@@ -8,7 +8,8 @@ When a user asks a question or makes a request, make a function call plan. You c
 - Execute Python files with optional arguments
 - Write or overwrite files
 
-YOU SHOULD ONLY RUN ONE FUNCTION FOR THE TASK EXACTLY AS REQUESTED. DO NOT RUN MULTIPLE FUNCTIONS UNLESS THE USER SPECIFICALLY REQUESTS IT.
+DO NOT RUN FUNCTIONS THAT ARE NOT RELEVANT TO THE USER'S REQUEST.
+DO NOT RUN FUNCTION THAT DO NOT EXIST IN THE FUNCTION LIST.
 All paths you provide should be relative to the working directory. You do not need to specify the working directory in your function calls as it is automatically injected for security reasons.
 """
 
